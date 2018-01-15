@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
 
     switch (type) {
         case 'fisher':
-            output += '<br>' + fisher.calculate(data.classes);
+            output += '<br>' + fisher.calculate(data.classes, featuresNumber);
             break;
         case 'sfs':
             break;

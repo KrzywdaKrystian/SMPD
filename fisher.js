@@ -1,12 +1,15 @@
 var methods = require('./methods');
+var math = require('mathjs');
 
-function calculate(classess) {
+// http://mathjs.org/docs/reference/functions/det.html
+
+function calculate(classes, featuresNumber) {
 
     let vectorOfAveragesForClass = [];
     let scatterMatrixForClass = [];
     let covarianceMatrixForClass = [];
 
-    classess.forEach(function (classObj, index) {
+    classes.forEach(function (classObj, index) {
         // Krok 1 - oblicz wktor srednich
         vectorOfAveragesForClass[index] = methods.getVectorOfAverages(classObj);
         // Krok 2 - oblicz macierz rozrzutu
@@ -19,8 +22,7 @@ function calculate(classess) {
     });
 
 
-    if(classess.length === 2) {
-        // Krok 4 - oblicz wspolczynik Fishera
+    if(classes.length === 2) {
 
     }
 
