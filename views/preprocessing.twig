@@ -1,6 +1,12 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
+  <ul class="nav nav-pills nav-justified">
+    <li class="active"><a href="/preprocessing">Preprocessing</a></li>
+    <li><a href="/">Features Selection</a></li>
+    <li><a href="/classifiers">Classifiers</a></li>
+  </ul>
+
   <h1>{{title}}</h1>
   <p>Welcome to {{title}}</p>
 {% endblock %}

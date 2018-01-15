@@ -1,0 +1,34 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <ul class="nav nav-pills nav-justified">
+        <li><a href="/preprocessing">Preprocessing</a></li>
+        <li class="active"><a href="/">Features Selection</a></li>
+        <li><a href="/classifiers">Classifiers</a></li>
+    </ul>
+
+    <div class="row" style="margin-top: 30px;">
+        <form method="POST">
+            <div class="col-md-8">
+                <select class="form-control" id="sel1" name="features-number">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
+                <div class="radio">
+                    <label><input type="radio" name="type" value="fisher"> Fisher</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="type" value="sfs"> SFS</label>
+                </div>
+                <button type="submit" class="btn btn-default">Compute</button>
+            </div>
+        </form>
+        <div class="col-md-4">
+            <code style="padding: 15px; background: #f2f2f2; width: 100%; height: 250px; display: block"># click
+                compute</code>
+        </div>
+    </div>
+
+{% endblock %}
