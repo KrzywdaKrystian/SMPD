@@ -26,15 +26,13 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
             result[name] = [];
         }
 
-        let tmp = '';
         if(row.length > 1) {
             noObjects++;
             for(let j = 1; j < row.length; j++) {
                 if(!result[name][j-1]) {
                     result[name][j-1] = [];
                 }
-                result[name][j-1].push(row[j]);
-                tmp += j + ' ';
+                result[name][j-1].push(parseFloat(row[j]));
             }
         }
     }
@@ -46,8 +44,6 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
             classObjects.push(result[items]);
         }
     }
-
-    console.log(classObjects[0][0]);
 
     app.set('data', {
         /*classes: [
@@ -65,6 +61,17 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
         noObjects: noObjects,
         noFeatures: classObjects[0].length,
     });
+
+    for(let x = 0; x < classObjects.length; x++) {
+        for(let y = 0; y < classObjects[x].length; y++) {
+            for(let z = 0; z < classObjects[x][y].length; z++) {
+                if(isNaN(classObjects[x][y][z])){
+                    console.error('Klasa: ' + x + ' cecha: ' + y + ' isNan', classObjects[x][y][z]);
+                }
+            }
+        }
+
+    }
 
 
 });
