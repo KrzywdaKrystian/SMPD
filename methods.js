@@ -23,6 +23,20 @@ function getVectorOfAverages(c) {
     return vector;
 }
 
+function getStandardDeviation(c) {
+
+    let standardDeviation = [];
+    c.forEach(function (feature, index) {
+        let sum = 0;
+        feature.forEach(function (sample) {
+            sum += sample * sample;
+        });
+        standardDeviation[index] = Math.sqrt(sum / feature.length);
+    });
+
+    return standardDeviation;
+}
+
 function getScatterMatrix(matrix, averageVector) {
 
     var scatterMatix = [];
@@ -61,6 +75,7 @@ function getMatrixCovariance(scatterMatrix) {
 module.exports = {
     drawMatrix: drawMatrix,
     getVectorOfAverages: getVectorOfAverages,
+    getStandardDeviation: getStandardDeviation,
     getScatterMatrix: getScatterMatrix,
     getMatrixCovariance: getMatrixCovariance
 };
