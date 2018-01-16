@@ -60,8 +60,23 @@ function calculateFisherND(classes, featuresNumber, noFeatures) {
 
     let combinations = methods.getCombinations(set, featuresNumber);
 
+    let fisherCombination = calculateFisherNDLogic(classes, combinations).fisherCombination;
+
+    let str = '';
+    fisherCombination.forEach(function (obj) {
+       str += 'c'+obj;
+    });
+
+    return {
+        features: fisherCombination,
+        message: 'Fisher ' + featuresNumber + 'D result: ' + str
+    }
+}
+
+function calculateFisherNDLogic(classes, combinations) {
+
     let matrix = [];
-    let fisher;
+    let fisher = null;
     let fisherCombination = [];
 
     let vectorOfAveragesForClass = [];
@@ -98,22 +113,51 @@ function calculateFisherND(classes, featuresNumber, noFeatures) {
         }
     });
 
-    let str = '';
-    fisherCombination.forEach(function (obj) {
-       str += 'c'+obj;
-    });
-
     return {
-        message: 'Fisher ' + featuresNumber + 'D result: ' + str
+        fisher: fisher,
+        fisherCombination: fisherCombination
     }
 }
 
-function calculateSFS() {
+function calculateSFS(classes, featuresNumber, noFeatures) {
 
+    let result = calculateFisher1D(classes, noFeatures);
+    let bestFeature = result.bestFisherIndex;
+
+    if(featuresNumber === 1) {
+        return {
+            message: 'SFS 1D result: Feature number: ' + bestFeature + ' is winner',
+        }
+    }
+    else {
+        let best = [bestFeature];
+
+        for(let i = 0; i < featuresNumber - 1; i++) {
+            let tmp = [];
+            for(let j = 0; j < noFeatures; j++) {
+                if(best.indexOf(j) < 0) {
+                    tmp.push(best.concat([j]));
+                }
+            }
+            let result = calculateFisherNDLogic(classes, tmp);
+            best = result.fisherCombination;
+        }
+
+        let str = '';
+        best.forEach(function (obj) {
+            str += 'c'+obj;
+        });
+
+        return {
+            features: best,
+            message: 'SFS ' + featuresNumber + 'D result: ' + str
+        }
+    }
 }
 
 module.exports = {
     calculateFisher1D: calculateFisher1D,
-    calculateFisherND: calculateFisherND
+    calculateFisherND: calculateFisherND,
+    calculateSFS: calculateSFS
 };
 

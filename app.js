@@ -18,7 +18,7 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
     let d = data.split('\n');
     let result = [];
     let noObjects = 0;
-    for(let i = 1; i < d.length; i++) {
+    for(let i = 1; i < d.length; i++) { // samples
 
         let row = d[i].split(',');
         let name = row[0].split(' ')[0];
@@ -28,7 +28,7 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
 
         if(row.length > 1) {
             noObjects++;
-            for(let j = 1; j < row.length; j++) {
+            for(let j = 1; j < row.length; j++) { // features
                 if(!result[name][j-1]) {
                     result[name][j-1] = [];
                 }

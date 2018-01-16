@@ -102,6 +102,24 @@ function getCombinations(set, k) {
     return combs;
 }
 
+function getGroups(set, k) {
+    let groups = [];
+
+    if (k > set.length || k <= 0) {
+        return [];
+    }
+
+    if(k == 1) {
+        for (i = 0; i < set.length; i++) {
+            combs.push([set[i]]);
+        }
+        return combs;
+    }
+
+
+
+}
+
 module.exports = {
     drawMatrix: drawMatrix,
     getVectorOfAverages: getVectorOfAverages,

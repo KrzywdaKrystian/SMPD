@@ -37,7 +37,7 @@ router.post('/', function(req, res, next) {
             }
             break;
         case 'sfs':
-
+            output += '<br>' + fisher.calculateSFS(data.classes, featuresNumber, data.noFeatures)['message'];
             break;
     }
 
