@@ -30,14 +30,14 @@ router.post('/', function(req, res, next) {
     switch (type) {
         case 'fisher':
             if(featuresNumber === 1) {
-                output += '<br>' + fisher.calculate1D(data.classes, data.noFeatures);
+                output += '<br>' + fisher.calculateFisher1D(data.classes, data.noFeatures)['message'];
             }
             else {
-                output += '<br>' + fisher.calculateND(data.classes, featuresNumber, data.noFeatures);
+                output += '<br>' + fisher.calculateFisherND(data.classes, featuresNumber, data.noFeatures)['message'];
             }
-
             break;
         case 'sfs':
+
             break;
     }
 

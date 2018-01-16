@@ -3,7 +3,7 @@ var math = require('mathjs');
 
 // http://mathjs.org/docs/reference/functions/det.html
 
-function calculate1D(classes, noFeatures) {
+function calculateFisher1D(classes, noFeatures) {
 
     let vectorOfAveragesForClass = [];
     let standardDeviation = [];
@@ -29,7 +29,11 @@ function calculate1D(classes, noFeatures) {
         }
     }
 
-    return 'Fisher 1D result: Feature number: ' + bestFisherIndex + ' with value: ' + bestFisherValue;
+    return {
+        bestFisherIndex: bestFisherIndex,
+        bestFisherValue: bestFisherValue,
+        message: 'Fisher 1D result: Feature number: ' + bestFisherIndex + ' with value: ' + bestFisherValue,
+    }
 }
 
 function getNumeratorForFisherND(uA, uB) {
@@ -46,8 +50,7 @@ function getNumeratorForFisherND(uA, uB) {
     return Math.sqrt(sum);
 }
 
-function calculateND(classes, featuresNumber, noFeatures) {
-
+function calculateFisherND(classes, featuresNumber, noFeatures) {
 
     let set = [];
 
@@ -55,8 +58,7 @@ function calculateND(classes, featuresNumber, noFeatures) {
         set.push(i);
     }
 
-    let combinations = getCombinations(set, featuresNumber);
-
+    let combinations = methods.getCombinations(set, featuresNumber);
 
     let matrix = [];
     let fisher;
@@ -101,42 +103,17 @@ function calculateND(classes, featuresNumber, noFeatures) {
        str += 'c'+obj;
     });
 
-    return 'Fisher ' + featuresNumber + 'D result: ' + str;
+    return {
+        message: 'Fisher ' + featuresNumber + 'D result: ' + str
+    }
+}
+
+function calculateSFS() {
+
 }
 
 module.exports = {
-    calculate1D: calculate1D,
-    calculateND: calculateND
+    calculateFisher1D: calculateFisher1D,
+    calculateFisherND: calculateFisherND
 };
-
-
-function getCombinations(set, k) {
-    var i, j, combs, head, tailcombs;
-
-    if (k > set.length || k <= 0) {
-        return [];
-    }
-
-    if (k == set.length) {
-        return [set];
-    }
-
-    if (k == 1) {
-        combs = [];
-        for (i = 0; i < set.length; i++) {
-            combs.push([set[i]]);
-        }
-        return combs;
-    }
-
-    combs = [];
-    for (i = 0; i < set.length - k + 1; i++) {
-        head = set.slice(i, i + 1);
-        tailcombs = getCombinations(set.slice(i + 1), k - 1);
-        for (j = 0; j < tailcombs.length; j++) {
-            combs.push(head.concat(tailcombs[j]));
-        }
-    }
-    return combs;
-}
 
