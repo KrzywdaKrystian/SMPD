@@ -11,10 +11,9 @@
         <form method="POST">
             <div class="col-md-8">
                 <select class="form-control" id="sel1" name="features_number">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
+                    {% for i in range(1, 64) %}
+                        <option>{{ i }}</option>
+                    {% endfor %}
                 </select>
                 <div class="radio">
                     <label><input type="radio" checked name="type" value="fisher"> Fisher</label>

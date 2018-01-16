@@ -18,7 +18,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    console.log('post');
 
     let type = req.body.type;
     let featuresNumber = parseInt(req.body.features_number);
@@ -28,12 +27,8 @@ router.post('/', function(req, res, next) {
         '<br>noObjects: ' + data.noObjects +
         '<br>noFeatures: ' + data.noFeatures;
 
-
-    console.log(type, featuresNumber);
-
     switch (type) {
         case 'fisher':
-            console.log(featuresNumber);
             if(featuresNumber === 1) {
                 output += '<br>' + fisher.calculate1D(data.classes, data.noFeatures);
             }
