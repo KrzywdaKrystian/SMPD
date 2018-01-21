@@ -27,19 +27,33 @@ router.post('/', function(req, res, next) {
         '<br>noObjects: ' + data.noObjects +
         '<br>noFeatures: ' + data.noFeatures;
 
+    let result = null;
+    let selectedFeatures = [];
     switch (type) {
         case 'fisher':
             if(featuresNumber === 1) {
-                output += '<br>' + fisher.calculateFisher1D(data.classes, data.noFeatures)['message'];
+                result = fisher.calculateFisher1D(data.classes, data.noFeatures);
+                selectedFeatures.push(result.bestFisherIndex);
+                output += '<br>' + result['message'];
             }
             else {
-                output += '<br>' + fisher.calculateFisherND(data.classes, featuresNumber, data.noFeatures)['message'];
+                result = fisher.calculateFisherND(data.classes, featuresNumber, data.noFeatures);
+                result.features.forEach(function (feature) {
+                    selectedFeatures.push(feature);
+                });
+                output += '<br>' + result['message'];
             }
             break;
         case 'sfs':
-            output += '<br>' + fisher.calculateSFS(data.classes, featuresNumber, data.noFeatures)['message'];
+            result = fisher.calculateSFS(data.classes, featuresNumber, data.noFeatures);
+            result.features.forEach(function (feature) {
+                selectedFeatures.push(feature);
+            });
+            output += '<br>' + result['message'];
             break;
     }
+
+    req.app.set('selected_features', selectedFeatures);
 
     res.render('featuresselection', { output: output });
 });

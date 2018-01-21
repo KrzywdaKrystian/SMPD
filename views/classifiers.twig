@@ -1,12 +1,52 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-  <ul class="nav nav-pills nav-justified">
-    <li><a href="/preprocessing">Preprocessing</a></li>
-    <li><a href="/">Features Selection</a></li>
-    <li class="active"><a href="/classifiers">Classifiers</a></li>
-  </ul>
+    <ul class="nav nav-pills nav-justified">
+        <li><a href="/preprocessing">Preprocessing</a></li>
+        <li><a href="/">Features Selection</a></li>
+        <li class="active"><a href="/classifiers">Classifiers</a></li>
+    </ul>
 
-  <h1>{{title}}</h1>
-  <p>Welcome to {{title}}</p>
+    <div class="row" style="margin-top: 30px;">
+        <form method="POST">
+            <div class="col-md-8">
+                <p>{{ features }}</p>
+                <div class="form-group">
+                    <label for="sel1">Classifier:</label>
+                    <select class="form-control" id="sel1" name="classifier">
+                        <option>NN</option>
+                        <option>k-NN</option>
+                        <option>NM</option>
+                        <option>k-NM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sel1">k:</label>
+                    <select class="form-control" id="sel1" name="k">
+                        {% for i in range(1, 40) %}
+                            <option>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="train_part">Train part (%):</label>
+                        <input type="text" class="form-control" value="{{ train_part ? train_part : 0 }}" id="train_part" name="train_part">
+                    </div>
+                    <div class="form-group">
+                        <button name="form_type" type="submit" class="btn btn-default" value="train">Train</button>
+                    </div>
+
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <button name="form_type" type="submit" class="btn btn-success" value="execute">Execute</button>
+                </div>
+
+
+            </div>
+        </form>
+        <div class="col-md-4">
+            <code style="padding: 15px; background: #f2f2f2; width: 100%; height: 250px; display: block">{{ output }}</code>
+        </div>
+    </div>
 {% endblock %}

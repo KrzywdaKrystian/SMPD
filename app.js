@@ -46,21 +46,13 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
     }
 
     app.set('data', {
-        /*classes: [
-            [
-                /!* cecha 1 *!/ [1, 1, 2, 1],
-                /!* cecha 2 *!/ [-1, 0, -1, -1]
-            ],
-            [
-                /!* cecha 1 *!/ [1, 1, 2, 2],
-                /!* cecha 2 *!/ [1, 1, 2, 1]
-            ]
-        ],*/
         classes: classObjects,
         noClasses: classObjects.length,
         noObjects: noObjects,
         noFeatures: classObjects[0].length,
     });
+
+    app.set('train_part', 60);
 
     for(let x = 0; x < classObjects.length; x++) {
         for(let y = 0; y < classObjects[x].length; y++) {
