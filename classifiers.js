@@ -28,8 +28,8 @@ function calculate_NN(trainSet, testSet) {
     }
 
     return {
-        effectiveness: countSuccess/testSet.length,
-        message: 'Effectiveness: ' + countSuccess/testSet.length + '%'
+        effectiveness: countSuccess/(countSuccess+countFail) * 100,
+        message: 'Skutecznosc na poziomie: ' + ( countSuccess/(countSuccess+countFail) * 100 ) +'%'
     };
 }
 
@@ -54,13 +54,8 @@ function calculate_k_NN(k, trainSet, testSet) {
 
         });
         // sort
-        distances = distances.sort(function(a, b){
-            let keyA = new Date(a.distance),
-                keyB = new Date(b.distance);
-            // Compare the 2 dates
-            if(keyA < keyB) return -1;
-            if(keyA > keyB) return 1;
-            return 0;
+        distances = distances.sort(function (a, b) {
+            return a.distance - b.distance
         });
 
         // check
@@ -82,12 +77,21 @@ function calculate_k_NN(k, trainSet, testSet) {
 
     }
     return {
-        effectiveness: countSuccess/testSet.length,
-        message: 'Effectiveness: ' + countSuccess/testSet.length + '%'
+        effectiveness: (countSuccess/(countSuccess+countFail)) * 100,
+        message: 'Skutecznosc na poziomie: ' + ( countSuccess/(countSuccess+countFail) * 100 ) +'%'
     };
 }
 
 function calculate_NM(noClasses, trainingSet, testSet) {
+
+    let countSuccess = 0;
+    let countFail = 0;
+
+    // trainingSet - ma klasy
+
+    for(let i = 0; i < testSet.length; i++) {
+
+    }
 
     return {
         'message' : 'calculate_NM'

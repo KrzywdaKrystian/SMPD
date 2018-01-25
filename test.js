@@ -1,4 +1,6 @@
-let trainPart = 50;
+var classifiers = require("./classifiers");
+
+let trainPart = 70;
 let selectedFeatures = [1, 2, 3];
 let data = {
     classes: [
@@ -24,7 +26,7 @@ let testSet = [];
 
 data.classes.forEach(function (classObj, classIndex) {
     // get random indexes to trainSet
-    let trainSetIndexes = getRandomIndexes(classObj[0].length * trainPart/100, classObj[0].length);
+    let trainSetIndexes = getRandomIndexes(classObj[0].length * trainPart / 100, classObj[0].length);
     // console.log('trainSetIndexes', trainSetIndexes);
     // build trainSet and testSet from selected features
     trainSet[classIndex] = [];
@@ -33,14 +35,14 @@ data.classes.forEach(function (classObj, classIndex) {
     classObj.forEach(function (feature, featureIndex) {
 
         // only selected features
-        if(selectedFeatures.indexOf(featureIndex) > -1) {
+        if (selectedFeatures.indexOf(featureIndex) > -1) {
             // console.log('featureIndex', featureIndex);
             // each selected features
             // console.log('trainSetIndexes', trainSetIndexes[classIndex]);
             feature.forEach(function (sample, sampleIndex) {
 
                 // only selected samples
-                if(trainSetIndexes.indexOf(sampleIndex) > -1) {
+                if (trainSetIndexes.indexOf(sampleIndex) > -1) {
                     // classIndex, featureIndex
                     // console.log('sampleIndex', sampleIndex, trainSetIndexes, sampleIndex);
                     trainSet[classIndex].push(sample);
@@ -60,102 +62,10 @@ data.classes.forEach(function (classObj, classIndex) {
 // console.log(testSet);
 
 
-function execute_NN(trainSet, testSet) {
-
-    let countSuccess = 0;
-    let countFail = 0;
-
-    for(let i = 0; i < testSet.length; i++) {
-        let tmp = null;
-        let tmpClassIndex = null;
-
-        trainSet.forEach(function (testSetFromClass, classIndex) {
-
-            testSetFromClass.forEach(function (sample, sampleIndex) {
-                let distance = Math.sqrt(Math.pow(testSet[i]['value'] - sample, 2));
-                if(tmp === null || distance < tmp) {
-                    tmp = distance;
-                    tmpClassIndex = classIndex;
-                }
-            });
-
-        });
-
-        if(tmpClassIndex === testSet[i]['orginal_class_index']) {
-            countSuccess++;
-        }
-        else {
-            countFail++;
-        }
-    }
-
-    return {
-        effectiveness: countSuccess/(countSuccess+countFail),
-        message: 'Skutecznosc na poziomie: ' + countSuccess/(countSuccess+countFail)
-    };
-}
-
-function execute_k_NN(k, trainSet, testSet) {
-
-    let countSuccess = 0;
-    let countFail = 0;
-
-    for(let i = 0; i < testSet.length; i++) {
-        let tmp = null;
-        let tmpClassIndex = null;
-
-        let distances = [];
-        trainSet.forEach(function (testSetFromClass, classIndex) {
-
-
-            testSetFromClass.forEach(function (sample, sampleIndex) {
-                let distance = Math.sqrt(Math.pow(testSet[i]['value'] - sample, 2));
-                distances.push({
-                    distance: distance,
-                    classIndex: classIndex
-                });
-            });
-
-            // z posortowanej tablicy wybrac k elementow i sprawdzic do ktorej klasy czesciej przynalezy
-
-
-        });
-
-        distances = distances.sort(function(a, b){
-            let keyA = new Date(a.distance),
-                keyB = new Date(b.distance);
-            // Compare the 2 dates
-            if(keyA < keyB) return -1;
-            if(keyA > keyB) return 1;
-            return 0;
-        });
-        for(let j = 0; j < k; j++) {
-            if(tmp === null || distances[j]['distance'] < tmp) {
-                tmp = distances[j]['distance'];
-                tmpClassIndex = distances[j]['classIndex'];
-            }
-        }
-
-        if(tmpClassIndex === testSet[i]['orginal_class_index']) {
-            countSuccess++;
-        }
-        else {
-            countFail++;
-        }
-
-
-    }
-    return {
-        effectiveness: countSuccess/(countSuccess+countFail),
-        message: 'Skutecznosc na poziomie: ' + countSuccess/(countSuccess+countFail)
-    };
-}
-
-// NN
-let nn = execute_NN(trainSet, testSet);
-
-let knn = execute_k_NN(10, trainSet, testSet);
-
+let nn2 = classifiers.calculate_NN(trainSet, testSet);
+console.log('nn, ' + nn2.message, nn2.effectiveness);
+let knn2 = classifiers.calculate_k_NN(7, trainSet, testSet);
+console.log('knn ' + knn2.message, knn2.effectiveness);
 
 
 /*
@@ -215,9 +125,9 @@ function executeNN(testSet, trainSet) {
 
 function getRandomIndexes(n, max) {
     let arr = [];
-    while(arr.length < n){
-        let randomnumber = Math.floor(Math.random()*max) ;
-        if(arr.indexOf(randomnumber) > -1) continue;
+    while (arr.length < n) {
+        let randomnumber = Math.floor(Math.random() * max);
+        if (arr.indexOf(randomnumber) > -1) continue;
         arr[arr.length] = randomnumber;
     }
     return arr;
