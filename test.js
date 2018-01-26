@@ -62,10 +62,12 @@ data.classes.forEach(function (classObj, classIndex) {
 // console.log(testSet);
 
 
-let nn2 = classifiers.calculate_NN(trainSet, testSet);
-console.log('nn, ' + nn2.message, nn2.effectiveness);
-let knn2 = classifiers.calculate_k_NN(7, trainSet, testSet);
-console.log('knn ' + knn2.message, knn2.effectiveness);
+let nn = classifiers.calculate_NN(trainSet, testSet);
+console.log('nn, ' + nn.message, nn.effectiveness);
+let knn = classifiers.calculate_k_NN(7, trainSet, testSet);
+console.log('knn ' + knn.message, knn.effectiveness);
+let nm = classifiers.calculate_NM(trainSet, testSet);
+console.log('knn ' + nm.message, nm.effectiveness);
 
 
 /*

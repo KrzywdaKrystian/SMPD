@@ -46,9 +46,14 @@ router.post('/', function(req, res, next) {
             break;
         case 'sfs':
             result = fisher.calculateSFS(data.classes, featuresNumber, data.noFeatures);
-            result.features.forEach(function (feature) {
-                selectedFeatures.push(feature);
-            });
+            if(featuresNumber === 1) {
+                selectedFeatures.push(result.bestFisherIndex);
+            }
+            else {
+                result.features.forEach(function (feature) {
+                    selectedFeatures.push(feature);
+                });
+            }
             output += '<br>' + result['message'];
             break;
     }

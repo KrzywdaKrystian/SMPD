@@ -41,43 +41,8 @@ router.post('/', function (req, res, next) {
         '<br>noObjects: ' + data.noObjects +
         '<br>noFeatures: ' + data.noFeatures;
 
-    let sets = null;
 
-    if(req.body.form_type === 'train') {
-
-        sets = generateTrainAndTestSet(data.classes,
-            req.app.get('selected_features'),
-            req.body.train_part);
-
-        req.app.set('train_part', req.body.train_part);
-        req.app.set('training_set', sets.trainSet);
-        req.app.set('test_set', sets.testSet);
-
-        output += '<br>[Train] Test and training set was generated!';
-    }
-    else if(req.body.form_type === 'bootstrap') {
-
-        req.app.set('train_part', req.body.train_part);
-        let selectedFeatures = req.app.get('selected_features');
-
-
-        req.app.set('training_set', []);
-        req.app.set('test_set', []);
-
-        output += '<br>[Bootstrap] Test and training set was generated!';
-    }
-    else if(req.body.form_type === 'crossvalidation') {
-
-        req.app.set('train_part', req.body.train_part);
-        let selectedFeatures = req.app.get('selected_features');
-
-
-        req.app.set('training_set', []);
-        req.app.set('test_set', []);
-
-        output += '<br>[Cross-validation] Test and training set was generated!';
-    }
-    else if(req.body.form_type === 'execute') {
+    if(req.body.form_type === 'execute') {
         let trainingSet = req.app.get('training_set');
         let testSet = req.app.get('test_set');
 
@@ -89,12 +54,40 @@ router.post('/', function (req, res, next) {
                 output += '<br>' + '[kNN, k = ' + req.body.k + '] ' + classifiers.calculate_k_NN(req.body.k, trainingSet, testSet)['message'];
                 break;
             case "nm":
-                output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet);
+                output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet)['message'];
                 break;
             case "knm":
-                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(trainingSet, testSet);
+                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(trainingSet, testSet)['message'];
                 break;
         }
+    }
+    else {
+
+        let sets = null;
+        switch (req.body.form_type ){
+            case "train":
+                sets = generateTrainAndTestSet(data.classes,
+                    req.app.get('selected_features'),
+                    req.body.train_part);
+                output += '<br>[Train] Test and training set was generated!';
+                break;
+            case "bootstrap":
+                sets = generateTrainAndTestSetBootstrap(data.classes,
+                    req.app.get('selected_features'),
+                    req.body.train_part);
+                output += '<br>[Bootstrap] Test and training set was generated!';
+                break;
+            case "crossvalidation":
+                sets = generateTrainAndTestSetCrossValidation(data.classes,
+                    req.app.get('selected_features'),
+                    req.body.train_part);
+                output += '<br>[Bootstrap] Test and training set was generated!';
+                break;
+        }
+
+        req.app.set('train_part', req.body.train_part);
+        req.app.set('training_set', sets.trainSet);
+        req.app.set('test_set', sets.testSet);
     }
 
     res.render('classifiers', {
@@ -160,6 +153,30 @@ function generateTrainAndTestSet(classes, selectedFeatures, trainPart) {
         })
 
     });
+
+    return {
+        trainSet : trainSet,
+        testSet : testSet
+    }
+}
+
+function generateTrainAndTestSetBootstrap(classes, selectedFeatures, trainPart) {
+
+    let trainSet = [];
+    let testSet = [];
+
+
+    return {
+        trainSet : trainSet,
+        testSet : testSet
+    }
+}
+
+function generateTrainAndTestSetCrossValidation(classes, selectedFeatures, trainPart) {
+
+    let trainSet = [];
+    let testSet = [];
+
 
     return {
         trainSet : trainSet,

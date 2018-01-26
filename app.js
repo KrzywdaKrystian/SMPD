@@ -52,7 +52,7 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
         noFeatures: classObjects[0].length,
     });
 
-    app.set('train_part', 60);
+    app.set('train_part', 80);
 
     for(let x = 0; x < classObjects.length; x++) {
         for(let y = 0; y < classObjects[x].length; y++) {
