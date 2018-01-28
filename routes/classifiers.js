@@ -128,14 +128,19 @@ function getFeaturesAsString(req) {
     return featuresAsString;
 }
 
-function generateTrainAndTestSet(classes, selectedFeatures, trainPart) {
+function generateTrainAndTestSet(classes, selectedFeatures, trainPart, randomIndexes) {
 
     let trainSet = [];
     let testSet = [];
 
     classes.forEach(function (classObj, classIndex) {
+        let trainSetIndexes = randomIndexes && randomIndexes[classIndex] ?
+            // from bootstrap or cross-validation
+            randomIndexes[classIndex] :
+            // train with %
+            getRandomIndexes(classObj[0].length * trainPart/100, classObj[0].length);
+
         // get random indexes to trainSet
-        let trainSetIndexes = getRandomIndexes(classObj[0].length * trainPart/100, classObj[0].length);
         // console.log('trainSetIndexes', trainSetIndexes);
         // build trainSet and testSet from selected features
         trainSet[classIndex] = [];
@@ -176,14 +181,17 @@ function generateTrainAndTestSet(classes, selectedFeatures, trainPart) {
 
 function generateTrainAndTestSetBootstrap(classes, selectedFeatures, trainPart) {
 
-    let trainSet = [];
-    let testSet = [];
+    let randomIndexes = [];
+    classes.forEach(function (classObj, classIndex) {
+        randomIndexes[classIndex] = [];
 
+        for(let i = 0; i < classObj[0].length; i++) {
+            randomIndexes[classIndex].push(getRandomInt(0, classObj[0].length - 1));
+        }
 
-    return {
-        trainSet : trainSet,
-        testSet : testSet
-    }
+    });
+
+    return generateTrainAndTestSet(classes, selectedFeatures, trainPart, randomIndexes)
 }
 
 function generateTrainAndTestSetCrossValidation(classes, selectedFeatures, trainPart) {
@@ -206,6 +214,10 @@ function getRandomIndexes(n, max) {
         arr[arr.length] = randomnumber;
     }
     return arr;
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 module.exports = router;

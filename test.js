@@ -26,6 +26,7 @@ let testSet = [];
 
 data.classes.forEach(function (classObj, classIndex) {
     // get random indexes to trainSet
+    console.log(classIndex);
     let trainSetIndexes = getRandomIndexes(classObj[0].length * trainPart / 100, classObj[0].length);
     // console.log('trainSetIndexes', trainSetIndexes);
     // build trainSet and testSet from selected features
@@ -146,3 +147,8 @@ function getRandomIndexes(n, max) {
     return arr;
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+console.log(getRandomInt(0,1));
