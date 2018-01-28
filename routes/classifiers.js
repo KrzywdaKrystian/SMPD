@@ -42,6 +42,10 @@ router.post('/', function (req, res, next) {
         '<br>noFeatures: ' + data.noFeatures;
 
 
+    req.app.set('k', req.body.k);
+    req.app.set('classifier', req.body.classifier);
+    req.app.set('train_part', req.body.train_part);
+
     if(req.body.form_type === 'execute') {
         let trainingSet = req.app.get('training_set');
         let testSet = req.app.get('test_set');
@@ -60,12 +64,15 @@ router.post('/', function (req, res, next) {
                 output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['message'];
                 break;
             case "all":
-                output += '<br>' + '[NN] ' + classifiers.calculate_NN(trainingSet, testSet)['message'];
-                output += '<br>' + '[kNN, k = ' + req.body.k + '] ' + classifiers.calculate_k_NN(req.body.k, trainingSet, testSet)['message'];
-                output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet)['message'];
-                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['message'];
+
+                console.log(testSet.length, trainingSet.length);
+                output += '<br>' + '[NN] ' + classifiers.calculate_NN(trainingSet, testSet)['effectiveness'] + '%';
+                output += '<br>' + '[kNN, k = ' + req.body.k + '] ' + classifiers.calculate_k_NN(req.body.k, trainingSet, testSet)['effectiveness'] + '%';
+                output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet)['effectiveness'] + '%';
+                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['effectiveness'] + '%';
                 break;
         }
+
     }
     else {
 
@@ -91,7 +98,6 @@ router.post('/', function (req, res, next) {
                 break;
         }
 
-        req.app.set('train_part', req.body.train_part);
         req.app.set('training_set', sets.trainSet);
         req.app.set('test_set', sets.testSet);
     }
@@ -99,6 +105,8 @@ router.post('/', function (req, res, next) {
     res.render('classifiers', {
         features: featuresAsString,
         train_part: req.app.get('train_part'),
+        classifier: req.app.get('classifier') ? req.app.get('classifier') : 'nn',
+        k: req.app.get('k') ? req.app.get('k') : 1,
         output: output,
         executeEnabled: req.app.get('training_set') && req.app.get('training_set').length > 0 && req.app.get('test_set') && req.app.get('test_set').length > 0
     });

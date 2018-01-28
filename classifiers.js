@@ -4,14 +4,14 @@ function calculate_NN(trainSet, testSet) {
     let countFail = 0;
 
     for (let i = 0; i < testSet.length; i++) {
-        let tmp = null;
+        let tmp = 999999999;
         let tmpClassIndex = null;
 
         trainSet.forEach(function (testSetFromClass, classIndex) {
 
             testSetFromClass.forEach(function (sample, sampleIndex) {
                 let distance = Math.sqrt(Math.pow(testSet[i]['value'] - sample, 2));
-                if (tmp === null || distance <= tmp) {
+                if (distance <= tmp) {
                     tmp = distance;
                     tmpClassIndex = classIndex;
                 }
@@ -27,6 +27,8 @@ function calculate_NN(trainSet, testSet) {
         }
     }
 
+    console.log('nn', countSuccess, countFail);
+
     return {
         effectiveness: countSuccess / (countSuccess + countFail) * 100,
         message: 'Effectiveness: ' + ( countSuccess / (countSuccess + countFail) * 100 ) + '%'
@@ -39,7 +41,7 @@ function calculate_k_NN(k, trainSet, testSet) {
     let countFail = 0;
 
     for (let i = 0; i < testSet.length; i++) {
-        let tmp = null;
+        let tmp = 999999999;
         let tmpClassIndex = null;
         let distances = [];
         trainSet.forEach(function (testSetFromClass, classIndex) {
@@ -54,6 +56,11 @@ function calculate_k_NN(k, trainSet, testSet) {
 
         });
         // sort
+        let tmpDistances = [];
+        distances.forEach(function (distance) {
+            tmpDistances.push(distance);
+        });
+
         distances = distances.sort(function (a, b) {
             return a.distance - b.distance
         });
@@ -61,7 +68,7 @@ function calculate_k_NN(k, trainSet, testSet) {
         // check
 
         for (let j = 0; j < k; j++) {
-            if (tmp === null || distances[j]['distance'] <= tmp) {
+            if (distances[j]['distance'] < tmp) {
                 tmp = distances[j]['distance'];
                 tmpClassIndex = distances[j]['classIndex'];
             }
@@ -76,6 +83,8 @@ function calculate_k_NN(k, trainSet, testSet) {
 
 
     }
+    console.log('knn', countSuccess, countFail);
+
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,
         message: 'Effectiveness: ' + ( countSuccess / (countSuccess + countFail) * 100 ) + '%'
@@ -97,12 +106,12 @@ function calculate_NM(trainSet, testSet) {
     }
 
     for (let i = 0; i < testSet.length; i++) {
-        let tmp = null;
+        let tmp = 999999999;
         let tmpClassIndex = null;
 
         means.forEach(function (mean, classIndex) {
             let distance = Math.sqrt(Math.pow(testSet[i]['value'] - mean, 2));
-            if (tmp === null || distance <= tmp) {
+            if (distance < tmp) {
                 tmp = distance;
                 tmpClassIndex = classIndex;
             }
@@ -115,6 +124,9 @@ function calculate_NM(trainSet, testSet) {
             countFail++;
         }
     }
+
+    console.log('nm', countSuccess, countFail);
+
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,
         message: 'Effectiveness: ' + ( countSuccess / (countSuccess + countFail) * 100 ) + '%'
@@ -228,13 +240,13 @@ function calculate_k_NM(k, trainSet, testSet) {
             // console.log("akcja", classIndex, changedCounter);
             let tmpIterationSelectionResult = [];
             for(let sampleIndex = 0; sampleIndex < classObj.length; sampleIndex++) {
-                let tmp = null;
+                let tmp = 999999999;
                 let tmpClusterIndex;
                 // centroidy
                 for(let clusterIndex = 0; clusterIndex < k; clusterIndex++) {
                     let tmpDistance = distances[clusterIndex][sampleIndex];
 
-                    if (tmp === null || tmpDistance <= tmp) {
+                    if (tmpDistance < tmp) {
                         tmp = tmpDistance;
                         tmpClusterIndex = clusterIndex;
                     }
@@ -263,6 +275,8 @@ function calculate_k_NM(k, trainSet, testSet) {
 
         let mahalonobis = [];
 
+        let winnerClass = null;
+
         classMeans.forEach(function (classMean, classIndex) {
 
             mahalonobis[classIndex] = [];
@@ -270,28 +284,28 @@ function calculate_k_NM(k, trainSet, testSet) {
                 mahalonobis[classIndex].push(calculateMahanolobis(testSet[i]['value'], mean, trainSet[classIndex].length));
             });
 
-            let minValue = null;
-            let winnerClass = null;
+            let minValue = 999999999;
 
-            for(let i = 0; i < mahalonobis.length; i++) {
-                mahalonobis[i].forEach(function (value) {
-                    if(minValue === null || value <= minValue) {
+            for(let j = 0; j < mahalonobis.length; j++) {
+                mahalonobis[j].forEach(function (value) {
+                    if(value < minValue) {
                         minValue = value;
-                        winnerClass = i;
+                        winnerClass = classIndex;
                     }
                 })
             }
-
-            if(winnerClass === testSet[i]['orginal_class_index']) {
-                countSuccess++;
-            }
-            else {
-                countFail++;
-            }
         });
 
+        if(winnerClass === testSet[i]['orginal_class_index']) {
+            countSuccess++;
+        }
+        else {
+            countFail++;
+        }
         
     }
+
+    console.log('knm', countSuccess, countFail);
 
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,

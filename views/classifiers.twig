@@ -14,11 +14,11 @@
                 <div class="form-group">
                     <label for="sel1">Classifier:</label>
                     <select class="form-control" id="sel1" name="classifier">
-                        <option value="nn">NN</option>
-                        <option value="knn">k-NN</option>
-                        <option value="nm">NM</option>
-                        <option value="knm">k-NM</option>
-                        <option value="all">All</option>
+                        <option {% if classifier == 'nn' %}selected{% endif %} value="nn">NN</option>
+                        <option {% if classifier == 'knn' %}selected{% endif %} value="knn">k-NN</option>
+                        <option {% if classifier == 'nm' %}selected{% endif %} value="nm">NM</option>
+                        <option {% if classifier == 'knm' %}selected{% endif %} value="knm">k-NM</option>
+                        <option {% if classifier == 'all' %}selected{% endif %} value="all">All</option>
                     </select>
                 </div>
                 <div class="form-group">

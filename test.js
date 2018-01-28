@@ -59,7 +59,7 @@ data.classes.forEach(function (classObj, classIndex) {
 
 });
 
-// console.log(testSet);
+console.log(testSet.length, trainSet.length);
 
 
 let nn = classifiers.calculate_NN(trainSet, testSet);
@@ -71,7 +71,16 @@ console.log('nm ' + nm.message, nm.effectiveness);
 let knm = classifiers.calculate_k_NM(7, trainSet, testSet);
 console.log('knn ' + knm.message, knm.effectiveness);
 
+let c = 0;
+let n = null;
 
+if(c < n) {
+    console.log('tal');
+}
+else {
+
+    console.log('nie');
+}
 /*
 
 
