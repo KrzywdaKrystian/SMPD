@@ -57,7 +57,13 @@ router.post('/', function (req, res, next) {
                 output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet)['message'];
                 break;
             case "knm":
-                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(trainingSet, testSet)['message'];
+                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['message'];
+                break;
+            case "all":
+                output += '<br>' + '[NN] ' + classifiers.calculate_NN(trainingSet, testSet)['message'];
+                output += '<br>' + '[kNN, k = ' + req.body.k + '] ' + classifiers.calculate_k_NN(req.body.k, trainingSet, testSet)['message'];
+                output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet)['message'];
+                output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['message'];
                 break;
         }
     }

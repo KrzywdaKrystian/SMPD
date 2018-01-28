@@ -1,7 +1,7 @@
 var classifiers = require("./classifiers");
 
 let trainPart = 70;
-let selectedFeatures = [1, 2, 3];
+let selectedFeatures = [0, 1, 2, 3];
 let data = {
     classes: [
         // Acer
@@ -67,7 +67,9 @@ console.log('nn, ' + nn.message, nn.effectiveness);
 let knn = classifiers.calculate_k_NN(7, trainSet, testSet);
 console.log('knn ' + knn.message, knn.effectiveness);
 let nm = classifiers.calculate_NM(trainSet, testSet);
-console.log('knn ' + nm.message, nm.effectiveness);
+console.log('nm ' + nm.message, nm.effectiveness);
+let knm = classifiers.calculate_k_NM(7, trainSet, testSet);
+console.log('knn ' + knm.message, knm.effectiveness);
 
 
 /*
