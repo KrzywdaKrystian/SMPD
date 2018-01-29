@@ -6,3 +6,7 @@ body {
 a {
   color: #00B7FF;
 }
+
+.type-data {}
+.type-data label { width: 400px; }
+.type-data input[type="text"] { display: inline-block; width: auto; float: right; }

@@ -53,6 +53,7 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
     });
 
     app.set('train_part', 80);
+    app.set('generate_data', 'percentage');
 
     for(let x = 0; x < classObjects.length; x++) {
         for(let y = 0; y < classObjects[x].length; y++) {

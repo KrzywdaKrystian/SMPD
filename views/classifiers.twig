@@ -29,27 +29,34 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="form-inline">
-                    <div class="form-group">
-                        <label for="train_part">Train part (%):</label>
-                        <input type="text" class="form-control" value="{{ train_part ? train_part : 0 }}" id="train_part" name="train_part">
+                {{ generate_data }}
+                <div class="form-group type-data">
+                    <div class="radio" style="margin-bottom: 20px;">
+                        <label>
+                            <input type="radio" name="generate_data" value="percentage" {% if generate_data == 'percentage' %}checked{% endif %}>
+                            <span>Train part (%):</span>
+                            <input type="text" class="form-control" value="{{ train_part ? train_part : 0 }}" id="train_part" name="train_part">
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <button name="form_type" type="submit" class="btn btn-default" value="train">Train</button>
+
+                    <div class="radio" style="margin-bottom: 20px;">
+                        <label>
+                            <input type="radio" name="generate_data" value="bootstrap" {% if generate_data == 'bootstrap' %}checked{% endif %}>
+                            Bootstrap
+                            <input type="text" style="visibility: hidden">
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <button name="form_type"
-                                type="submit"
-                                class="btn btn-info"
-                                value="bootstrap">Bootstrap</button>
+                    <div class="radio" style="margin-bottom: 20px;">
+                        <label>
+                            <input type="radio" name="generate_data" value="crossvalidation" {% if generate_data == 'crossvalidation' %}checked{% endif %}>
+                            Cross-validation (n)
+                            <input type="text" class="form-control" value="5" id="cross_part" name="cross_part">
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <button name="form_type"
-                                type="submit"
-                                class="btn btn-warning"
-                                value="crossvalidation">Cross-validation</button>
-                    </div>
+
+                    <button name="form_type" type="submit" class="btn btn-default" value="train">Train</button>
                 </div>
+
 
                 <div class="form-group" style="margin-top: 10px;">
                     <button name="form_type"

@@ -45,6 +45,7 @@ router.post('/', function (req, res, next) {
     req.app.set('k', req.body.k);
     req.app.set('classifier', req.body.classifier);
     req.app.set('train_part', req.body.train_part);
+    req.app.set('generate_data ', req.body.generate_data );
 
     if(req.body.form_type === 'execute') {
         let trainingSet = req.app.get('training_set');
@@ -77,8 +78,8 @@ router.post('/', function (req, res, next) {
     else {
 
         let sets = null;
-        switch (req.body.form_type ){
-            case "train":
+        switch (req.body.generate_data ){
+            case "percentage":
                 sets = generateTrainAndTestSet(data.classes,
                     req.app.get('selected_features'),
                     req.body.train_part);
@@ -105,6 +106,7 @@ router.post('/', function (req, res, next) {
     res.render('classifiers', {
         features: featuresAsString,
         train_part: req.app.get('train_part'),
+        generate_data: req.app.get('generate_data') ? req.app.get('generate_data') : 'percentage',
         classifier: req.app.get('classifier') ? req.app.get('classifier') : 'nn',
         k: req.app.get('k') ? req.app.get('k') : 1,
         output: output,

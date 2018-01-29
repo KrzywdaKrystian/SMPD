@@ -27,7 +27,7 @@ function calculate_NN(trainSet, testSet) {
         }
     }
 
-    console.log('nn', countSuccess, countFail);
+    // console.log('nn', countSuccess, countFail);
 
     return {
         effectiveness: countSuccess / (countSuccess + countFail) * 100,
@@ -42,7 +42,7 @@ function calculate_k_NN(k, trainSet, testSet) {
 
     for (let i = 0; i < testSet.length; i++) {
         let tmp = 999999999;
-        let tmpClassIndex = null;
+        let winnerClass = null;
         let distances = [];
         trainSet.forEach(function (testSetFromClass, classIndex) {
 
@@ -58,10 +58,11 @@ function calculate_k_NN(k, trainSet, testSet) {
         // sort
         let tmpDistances = [];
         distances.forEach(function (distance) {
-            tmpDistances.push(distance);
+            if(distance != 0)
+                tmpDistances.push(distance);
         });
 
-        distances = distances.sort(function (a, b) {
+        distances = tmpDistances.sort(function (a, b) {
             return a.distance - b.distance
         });
 
@@ -70,11 +71,11 @@ function calculate_k_NN(k, trainSet, testSet) {
         for (let j = 0; j < k; j++) {
             if (distances[j]['distance'] < tmp) {
                 tmp = distances[j]['distance'];
-                tmpClassIndex = distances[j]['classIndex'];
+                winnerClass = distances[j]['classIndex'];
             }
         }
 
-        if (tmpClassIndex === testSet[i]['orginal_class_index']) {
+        if (winnerClass === testSet[i]['orginal_class_index']) {
             countSuccess++;
         }
         else {
@@ -125,7 +126,7 @@ function calculate_NM(trainSet, testSet) {
         }
     }
 
-    console.log('nm', countSuccess, countFail);
+    // console.log('nm', countSuccess, countFail);
 
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,
@@ -305,7 +306,7 @@ function calculate_k_NM(k, trainSet, testSet) {
         
     }
 
-    console.log('knm', countSuccess, countFail);
+    // console.log('knm', countSuccess, countFail);
 
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,
