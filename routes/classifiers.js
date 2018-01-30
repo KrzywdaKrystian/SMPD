@@ -21,6 +21,7 @@ router.get('/', function (req, res, next) {
     res.render('classifiers', {
         features: featuresAsString,
         train_part: req.app.get('train_part'),
+        generate_data: req.app.get('generate_data'),
         output: output
     });
 });
@@ -28,7 +29,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 
-    console.log(req.body.form_type, req.body.classifier, req.body.k, req.body.train_part);
+    console.log(req.body.form_type, req.body.classifier, req.body.k, req.body.train_part, req.body.generate_data);
 
     let featuresAsString = getFeaturesAsString(req);
     if(!featuresAsString) {
@@ -45,7 +46,6 @@ router.post('/', function (req, res, next) {
     req.app.set('k', req.body.k);
     req.app.set('classifier', req.body.classifier);
     req.app.set('train_part', req.body.train_part);
-    req.app.set('generate_data ', req.body.generate_data );
 
     if(req.body.form_type === 'execute') {
         let trainingSet = req.app.get('training_set');
@@ -106,11 +106,12 @@ router.post('/', function (req, res, next) {
     res.render('classifiers', {
         features: featuresAsString,
         train_part: req.app.get('train_part'),
-        generate_data: req.app.get('generate_data') ? req.app.get('generate_data') : 'percentage',
         classifier: req.app.get('classifier') ? req.app.get('classifier') : 'nn',
         k: req.app.get('k') ? req.app.get('k') : 1,
         output: output,
-        executeEnabled: req.app.get('training_set') && req.app.get('training_set').length > 0 && req.app.get('test_set') && req.app.get('test_set').length > 0
+        executeEnabled: req.app.get('training_set') && req.app.get('training_set').length > 0 && req.app.get('test_set') && req.app.get('test_set').length > 0,
+        generate_data: req.body.generate_data ? req.body.generate_data : req.app.get('generate'),
+        cross_part: req.body.cross_part ? req.body.cross_part : 5
     });
 
 });

@@ -25,11 +25,10 @@
                     <label for="sel1">k:</label>
                     <select class="form-control" id="sel1" name="k">
                         {% for i in range(1, 40) %}
-                            <option>{{ i }}</option>
+                            <option {{ i == k ? 'selected' : '' }}>{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                {{ generate_data }}
                 <div class="form-group type-data">
                     <div class="radio" style="margin-bottom: 20px;">
                         <label>
@@ -50,7 +49,7 @@
                         <label>
                             <input type="radio" name="generate_data" value="crossvalidation" {% if generate_data == 'crossvalidation' %}checked{% endif %}>
                             Cross-validation (n)
-                            <input type="text" class="form-control" value="5" id="cross_part" name="cross_part">
+                            <input type="text" class="form-control" value="{{ cross_part ? cross_part : 5 }}" id="cross_part" name="cross_part">
                         </label>
                     </div>
 
