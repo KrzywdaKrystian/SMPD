@@ -12,20 +12,20 @@
             <div class="col-md-8">
                 <select class="form-control" id="sel1" name="features_number">
                     {% for i in range(1, 64) %}
-                        <option>{{ i }}</option>
+                        <option {{ i == features_number ? 'selected' : '' }}>{{ i }}</option>
                     {% endfor %}
                 </select>
                 <div class="radio">
-                    <label><input type="radio" checked name="type" value="fisher"> Fisher</label>
+                    <label><input type="radio" {{ type == 'fisher' ? 'checked' : '' }} name="type" value="fisher"> Fisher</label>
                 </div>
                 <div class="radio">
-                    <label><input type="radio" name="type" value="sfs"> SFS</label>
+                    <label><input type="radio"  {{ type == 'sfs' ? 'checked' : '' }} name="type" value="sfs"> SFS</label>
                 </div>
                 <button type="submit" class="btn btn-success">Compute</button>
             </div>
         </form>
         <div class="col-md-4">
-            <code style="padding: 15px; background: #f2f2f2; width: 100%; height: 250px; display: block">{{ output }}</code>
+            <code style="padding: 15px; background: #f2f2f2; width: 100%; min-height: 250px; display: block">{{ output }}</code>
         </div>
     </div>
 

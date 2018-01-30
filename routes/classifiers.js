@@ -17,11 +17,14 @@ router.get('/', function (req, res, next) {
         '<br>noObjects: ' + data.noObjects +
         '<br>noFeatures: ' + data.noFeatures;
 
+    res.app.set('output', output + '<br>'+featuresAsString);
 
     res.render('classifiers', {
         features: featuresAsString,
         train_part: req.app.get('train_part'),
-        generate_data: req.app.get('generate_data'),
+        generate_data: 'percentage',
+        cross_part: 5,
+        k: req.app.get('k') ? req.app.get('k') : 1,
         output: output
     });
 });
@@ -38,10 +41,7 @@ router.post('/', function (req, res, next) {
     }
 
     let data = req.app.get('data');
-    let output = 'noClass: ' + data.classes.length  +
-        '<br>noObjects: ' + data.noObjects +
-        '<br>noFeatures: ' + data.noFeatures;
-
+    let output = res.app.get('output');
 
     req.app.set('k', req.body.k);
     req.app.set('classifier', req.body.classifier);
@@ -102,6 +102,9 @@ router.post('/', function (req, res, next) {
         req.app.set('training_set', sets.trainSet);
         req.app.set('test_set', sets.testSet);
     }
+
+
+    res.app.set('output', output);
 
     res.render('classifiers', {
         features: featuresAsString,

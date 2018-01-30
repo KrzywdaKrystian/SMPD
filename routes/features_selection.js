@@ -13,7 +13,9 @@ router.get('/', function(req, res, next) {
         '<br>noFeatures: ' + data.noFeatures;
 
     res.render('featuresselection', {
-        output: output
+        output: output,
+        features_number: 1,
+        type: 'fisher'
     });
 });
 
@@ -59,8 +61,13 @@ router.post('/', function(req, res, next) {
     }
 
     req.app.set('selected_features', selectedFeatures);
+    res.app.set('output', output);
 
-    res.render('featuresselection', { output: output });
+    res.render('featuresselection', {
+        output: output,
+        features_number: req.body.features_number,
+        type: req.body.type
+    });
 });
 
 module.exports = router;
