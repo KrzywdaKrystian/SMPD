@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test" : "test"
+    "test": "test"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -14,6 +14,7 @@
     "fs": "0.0.1-security",
     "mathjs": "^3.20.0",
     "morgan": "~1.9.0",
+    "process": "^0.11.10",
     "serve-favicon": "~2.4.5",
     "twig": "~0.10.3"
   }

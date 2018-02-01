@@ -1,5 +1,8 @@
 var classifiers = require("./classifiers");
+var train = require("./train");
 var fs = require('fs');
+
+var process = require('process');
 
 let trainSet = [];
 let testSet = [];
@@ -48,54 +51,72 @@ fs.readFile('Maple_Oak.txt', 'utf8', function(err, data) {
     };
 
 
+    process.argv.forEach(function (val, index, array) {
+        if(index == 2) {
+            let sets = null;
+            switch (val) {
+                case "train":
+                    console.log('train generated');
+                    sets = train.generateTrainAndTestSet(data.classes, selectedFeatures, trainPart);
+                    testSet = sets.testSet;
+                    trainSet = sets.trainSet;
+                    run();
+                    break;
+                case "bootstrap":
+                    console.log('bootstrap generated');
+                    sets = train.generateTrainAndTestSetBootstrap(data.classes, selectedFeatures, trainPart);
+                    testSet = sets.testSet;
+                    trainSet = sets.trainSet;
+                    run();
+                    break;
+                case "cross":
+                    console.log('crossvalidation generated');
+                    sets = train.generateTrainAndTestSetCrossValidation(data.classes, selectedFeatures, trainPart, 5);
 
-    data.classes.forEach(function (classObj, classIndex) {
-        // get random indexes to trainSet
-        console.log(classIndex);
-        let trainSetIndexes = getRandomIndexes(classObj[0].length * trainPart / 100, classObj[0].length);
-        // console.log('trainSetIndexes', trainSetIndexes);
-        // build trainSet and testSet from selected features
-        trainSet[classIndex] = [];
+                    let nnSum = 0;
+                    let knnSum = 0;
+                    let nmSum = 0;
+                    let knmSum = 0;
+                    for(let i = 0; i < sets.trainSet.length; i++){
+                        // console.log(i);
 
-        // each class
-        classObj.forEach(function (feature, featureIndex) {
-
-            // only selected features
-            if (selectedFeatures.indexOf(featureIndex) > -1) {
-                // console.log('featureIndex', featureIndex);
-                // each selected features
-                // console.log('trainSetIndexes', trainSetIndexes[classIndex]);
-                feature.forEach(function (sample, sampleIndex) {
-
-                    // only selected samples
-                    if (trainSetIndexes.indexOf(sampleIndex) > -1) {
-                        // classIndex, featureIndex
-                        // console.log('sampleIndex', sampleIndex, trainSetIndexes, sampleIndex);
-                        trainSet[classIndex].push(sample);
+                        let nn = classifiers.calculate_NN(sets.trainSet[i], sets.testSet[i]);
+                        nnSum += nn.effectiveness;
+                        let knn = classifiers.calculate_k_NN(7, sets.trainSet[i], sets.testSet[i]);
+                        knnSum += knn.effectiveness;
+                        let nm = classifiers.calculate_NM(sets.trainSet[i], sets.testSet[i]);
+                        nmSum += nm.effectiveness;
+                        let knm = classifiers.calculate_k_NM(7, sets.trainSet[i], sets.testSet[i]);
+                        knmSum += knm.effectiveness;
                     }
-                    else {
-                        testSet.push({
-                            value: sample,
-                            orginal_class_index: classIndex
-                        })
-                    }
-                })
+
+                    console.log('nn, ' + (nnSum/sets.trainSet.length));
+
+                    console.log('knn, ' + (knnSum/sets.trainSet.length));
+
+                    console.log('nm, ' + (nmSum/sets.trainSet.length));
+
+                    console.log('knn, ' + (knmSum/sets.trainSet.length));
+                    break;
+                default:
+                    console.log('-----__ERROR_-----');
             }
-        })
 
+
+
+
+            function run() {
+                let nn = classifiers.calculate_NN(trainSet, testSet);
+                console.log('nn, ' + nn.effectiveness);
+                let knn = classifiers.calculate_k_NN(7, trainSet, testSet);
+                console.log('knn ' + knn.effectiveness);
+                let nm = classifiers.calculate_NM(trainSet, testSet);
+                console.log('nm ' + nm.effectiveness);
+                let knm = classifiers.calculate_k_NM(7, trainSet, testSet);
+                console.log('knn ' + knm.effectiveness);
+            }
+        }
     });
-
-    console.log(testSet.length, trainSet.length);
-
-
-    let nn = classifiers.calculate_NN(trainSet, testSet);
-    console.log('nn, ' + nn.effectiveness);
-    let knn = classifiers.calculate_k_NN(7, trainSet, testSet);
-    console.log('knn ' + knn.effectiveness);
-    let nm = classifiers.calculate_NM(trainSet, testSet);
-    console.log('nm ' + nm.effectiveness);
-    let knm = classifiers.calculate_k_NM(7, trainSet, testSet);
-    console.log('knn ' + knm.effectiveness);
 
 });
 
@@ -114,5 +135,3 @@ function getRandomIndexes(n, max) {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-console.log(getRandomInt(0,1));

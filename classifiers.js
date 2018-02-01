@@ -57,8 +57,9 @@ function calculate_k_NN(k, trainSet, testSet) {
         });
         // sort
         let tmpDistances = [];
+
         distances.forEach(function (distance) {
-            if(distance != 0)
+
                 tmpDistances.push(distance);
         });
 
@@ -84,7 +85,7 @@ function calculate_k_NN(k, trainSet, testSet) {
 
 
     }
-    console.log('knn', countSuccess, countFail);
+    // console.log('knn', countSuccess, countFail);
 
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,
