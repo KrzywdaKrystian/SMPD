@@ -7,9 +7,9 @@ function calculate_NN(trainSet, testSet) {
         let tmp = 999999999;
         let tmpClassIndex = null;
 
-        trainSet.forEach(function (testSetFromClass, classIndex) {
+        trainSet.forEach(function (trainSetFromClass, classIndex) {
 
-            testSetFromClass.forEach(function (sample, sampleIndex) {
+            trainSetFromClass.forEach(function (sample, sampleIndex) {
                 let distance = Math.sqrt(Math.pow(testSet[i]['value'] - sample, 2));
                 if (distance <= tmp) {
                     tmp = distance;
@@ -37,44 +37,43 @@ function calculate_NN(trainSet, testSet) {
 
 function calculate_k_NN(k, trainSet, testSet) {
 
+
+
     let countSuccess = 0;
     let countFail = 0;
 
     for (let i = 0; i < testSet.length; i++) {
         let tmp = 999999999;
-        let winnerClass = null;
+        let tmpClassIndex = null;
         let distances = [];
-        trainSet.forEach(function (testSetFromClass, classIndex) {
+        trainSet.forEach(function (trainSetFromClass, classIndex) {
 
-            testSetFromClass.forEach(function (sample, sampleIndex) {
+            trainSetFromClass.forEach(function (sample, sampleIndex) {
                 let distance = Math.sqrt(Math.pow(testSet[i]['value'] - sample, 2));
-                distances.push({
-                    distance: distance,
-                    classIndex: classIndex
-                });
+                if (distance <= tmp) {
+                    tmp = distance;
+                    tmpClassIndex = classIndex;
+                    distances.push({
+                        distance: distance,
+                        classIndex: classIndex
+                    })
+                }
             });
 
         });
-        // sort
-        let tmpDistances = [];
 
-        distances.forEach(function (distance) {
+        distances = distances.reverse();
 
-                tmpDistances.push(distance);
-        });
-
-        distances = tmpDistances.sort(function (a, b) {
-            return a.distance - b.distance
-        });
-
-        // check
-
-        for (let j = 0; j < k; j++) {
-            if (distances[j]['distance'] < tmp) {
-                tmp = distances[j]['distance'];
-                winnerClass = distances[j]['classIndex'];
-            }
+        // only for two classes
+        let str = "";
+        for(let j = 0; j < k; j++) {
+            str += distances[j]['classIndex'] + ' ';
         }
+
+        let a = (str.match(/0/g) || []).length;
+        let b = (str.match(/1/g) || []).length;
+
+        let winnerClass = a > b ? 0 : 1;
 
         if (winnerClass === testSet[i]['orginal_class_index']) {
             countSuccess++;
@@ -82,10 +81,8 @@ function calculate_k_NN(k, trainSet, testSet) {
         else {
             countFail++;
         }
-
-
     }
-    // console.log('knn', countSuccess, countFail);
+
 
     return {
         effectiveness: (countSuccess / (countSuccess + countFail)) * 100,
