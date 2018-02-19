@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label for="sel1">k:</label>
                     <select class="form-control" id="sel1" name="k">
-                        {% for i in range(1, 40) %}
+                        {% for i in range(1, 40)  if i %2 == 1 %}
                             <option {{ i == k ? 'selected' : '' }}>{{ i }}</option>
                         {% endfor %}
                     </select>

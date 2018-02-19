@@ -38,7 +38,6 @@ function calculate_NN(trainSet, testSet) {
 function calculate_k_NN(k, trainSet, testSet) {
 
 
-
     let countSuccess = 0;
     let countFail = 0;
 
@@ -66,8 +65,11 @@ function calculate_k_NN(k, trainSet, testSet) {
 
         // only for two classes
         let str = "";
-        for(let j = 0; j < k; j++) {
-            str += distances[j]['classIndex'] + ' ';
+        let max = k > distances.length ? k : distances.length;
+        for (let j = 0; j < max; j++) {
+            if (distances[j] && distances[j]['classIndex']) {
+                str += distances[j]['classIndex'] + ' ';
+            }
         }
 
         let a = (str.match(/0/g) || []).length;
@@ -96,6 +98,7 @@ function calculate_NM(trainSet, testSet) {
     let countFail = 0;
 
     let means = [];
+    // means for class
     for (let i = 0; i < trainSet.length; i++) {
         let sum = 0;
         for (let j = 0; j < trainSet[i].length; j++) {
@@ -166,20 +169,20 @@ function calculate_k_NM(k, trainSet, testSet) {
         let clusterCenters = [];
         let clusterValues = [];
 
-        for(let i = 0; i < k; i++) {
+        for (let i = 0; i < k; i++) {
             clusterValues[i] = [];
         }
 
-        for(let i = 0; i < iterationSelectionResult.length; i++) {
+        for (let i = 0; i < iterationSelectionResult.length; i++) {
             clusterValues[iterationSelectionResult[i]].push(classObj[i]);
         }
 
-        for(let i = 0; i < k; i++) {
+        for (let i = 0; i < k; i++) {
             let sum = 0;
             for (let j = 0; j < clusterValues[i].length; j++) {
                 sum += clusterValues[i][j];
             }
-            clusterCenters[i] = clusterValues[i].length > 0 ? sum/clusterValues[i].length : 0;
+            clusterCenters[i] = clusterValues[i].length > 0 ? sum / clusterValues[i].length : 0;
         }
 
         return clusterCenters;
@@ -199,14 +202,14 @@ function calculate_k_NM(k, trainSet, testSet) {
     };
 
     let compare = function (arr1, arr2) {
-        if(arr1 !== null && arr2 !== null) {
-            if(arr1.length !== arr2.length) {
+        if (arr1 !== null && arr2 !== null) {
+            if (arr1.length !== arr2.length) {
                 // not the same
                 return false;
             }
             else {
-                for(let i = 0; i < arr1.length; i++) {
-                    if(arr1[i] !== arr2[i]) {
+                for (let i = 0; i < arr1.length; i++) {
+                    if (arr1[i] !== arr2[i]) {
                         // not the same
                         return false;
                     }
@@ -216,10 +219,10 @@ function calculate_k_NM(k, trainSet, testSet) {
         }
         return false;
     };
-    
+
     let calculateMahanolobis = function (sample, mean, samplesCount) {
-        let covariantMatrix = (1.0/samplesCount)*(sample-mean);
-        return (sample-mean)*(1.0/covariantMatrix) *(sample-mean);
+        let covariantMatrix = (1.0 / samplesCount) * (sample - mean);
+        return (sample - mean) * (1.0 / covariantMatrix) * (sample - mean);
     };
 
     let classMeans = [];
@@ -238,11 +241,11 @@ function calculate_k_NM(k, trainSet, testSet) {
         while (changed) {
             // console.log("akcja", classIndex, changedCounter);
             let tmpIterationSelectionResult = [];
-            for(let sampleIndex = 0; sampleIndex < classObj.length; sampleIndex++) {
+            for (let sampleIndex = 0; sampleIndex < classObj.length; sampleIndex++) {
                 let tmp = 999999999;
                 let tmpClusterIndex;
                 // centroidy
-                for(let clusterIndex = 0; clusterIndex < k; clusterIndex++) {
+                for (let clusterIndex = 0; clusterIndex < k; clusterIndex++) {
                     let tmpDistance = distances[clusterIndex][sampleIndex];
 
                     if (tmpDistance < tmp) {
@@ -272,22 +275,23 @@ function calculate_k_NM(k, trainSet, testSet) {
 
     for (let i = 0; i < testSet.length; i++) {
 
-        let mahalonobis = [];
+        let results = [];
 
         let winnerClass = null;
 
         classMeans.forEach(function (classMean, classIndex) {
 
-            mahalonobis[classIndex] = [];
+            results[classIndex] = [];
             classMean.forEach(function (mean) {
-                mahalonobis[classIndex].push(calculateMahanolobis(testSet[i]['value'], mean, trainSet[classIndex].length));
+                // results[classIndex].push(calculateMahanolobis(testSet[i]['value'], mean, trainSet[classIndex].length));
+                results[classIndex].push(Math.sqrt(Math.pow((mean - testSet[i]['value']), 2)));
             });
 
             let minValue = 999999999;
 
-            for(let j = 0; j < mahalonobis.length; j++) {
-                mahalonobis[j].forEach(function (value) {
-                    if(value < minValue) {
+            for (let j = 0; j < results.length; j++) {
+                results[j].forEach(function (value) {
+                    if (value < minValue) {
                         minValue = value;
                         winnerClass = classIndex;
                     }
@@ -295,13 +299,13 @@ function calculate_k_NM(k, trainSet, testSet) {
             }
         });
 
-        if(winnerClass === testSet[i]['orginal_class_index']) {
+        if (winnerClass === testSet[i]['orginal_class_index']) {
             countSuccess++;
         }
         else {
             countFail++;
         }
-        
+
     }
 
     // console.log('knm', countSuccess, countFail);

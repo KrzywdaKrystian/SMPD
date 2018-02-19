@@ -131,10 +131,10 @@ router.post('/', function (req, res, next) {
                 case "all":
 
                     console.log(testSet.length, trainingSet.length);
-                    output += '<br>' + '[NN] ' + classifiers.calculate_NN(trainingSet, testSet)['effectiveness'] + '%';
-                    output += '<br>' + '[kNN, k = ' + req.body.k + '] ' + classifiers.calculate_k_NN(req.body.k, trainingSet, testSet)['effectiveness'] + '%';
-                    output += '<br>' + '[NM] ' + classifiers.calculate_NM(trainingSet, testSet)['effectiveness'] + '%';
-                    output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['effectiveness'] + '%';
+                    output += '<br>' + '[NN] ' + parseInt(classifiers.calculate_NN(trainingSet, testSet)['effectiveness']) + '%';
+                    output += '<br>' + '[kNN, k = ' + req.body.k + '] ' + parseInt(classifiers.calculate_k_NN(req.body.k, trainingSet, testSet)['effectiveness']) + '%';
+                    output += '<br>' + '[NM] ' + parseInt(classifiers.calculate_NM(trainingSet, testSet)['effectiveness']) + '%';
+                    output += '<br>' + '[kNM, k = ' + req.body.k + '] ' + parseInt(classifiers.calculate_k_NM(req.body.k, trainingSet, testSet)['effectiveness']) + '%';
                     break;
             }
         }
